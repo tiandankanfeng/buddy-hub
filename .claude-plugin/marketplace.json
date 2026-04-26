@@ -16,6 +16,13 @@
       "version": "1.0.0",
       "category": "workflow",
       "tags": ["sop", "state-machine", "multi-agent", "code-review"]
+    },
+    {
+      "name": "formatter",
+      "description": "Auto-format source files after each Claude Code edit. Ships with the Alipay Convention (Alibaba Java Coding Guidelines) profile out of the box; architecture supports adding more languages and style profiles.",
+      "source": "./plugins/formatter",
+      "category": "code-quality",
+      "tags": ["formatter", "code-style", "java", "alipay", "alibaba", "spotless"]
     }
   ]
 }

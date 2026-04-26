@@ -68,6 +68,24 @@ claude plugin install flowsmith@buddy-hub
 
 详见 [flowsmith README](./plugins/flowsmith/README.md)。
 
+### 🎨 [formatter](./plugins/formatter) — 编辑即格式化的代码风格守卫
+
+Claude 每次编辑文件后自动运行格式化，任务结束时做全局风格检查。内置 **Alipay Convention**（阿里巴巴 Java 开发规约）配置，支持扩展更多语言和风格。
+
+**核心特性**：
+- PostToolUse Hook：编辑后自动 `spotless:apply` 单文件格式化
+- Stop Hook：任务结束前全局 `spotless:check` 风格检查
+- `/formatter:setup` 一键接入项目构建配置
+- 内置 Authoring Skill，引导 Claude 遵循编码规范中格式化器无法自动修复的部分
+- 支持 Maven / Gradle，支持自定义 Profile 扩展
+
+**安装**：
+```bash
+claude plugin install formatter@buddy-hub
+```
+
+详见 [formatter README](./plugins/formatter/README.md)。
+
 ---
 
 ## Marketplace 结构
@@ -77,7 +95,8 @@ buddy-hub/
 ├── .claude-plugin/
 │   └── marketplace.json                  # Marketplace 元信息
 └── plugins/
-    └── flowsmith/                        # SOP 工作流插件
+    ├── flowsmith/                        # SOP 工作流插件
+    └── formatter/                        # 代码格式化插件
 ```
 
 ---

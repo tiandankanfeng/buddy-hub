@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "formatter",
+  "version": "1.0.0",
+  "description": "Auto-formats source files on every edit via Claude Code hooks. v1 ships with the Alipay Convention (Alibaba Java Coding Guidelines) Java profile, backed by Spotless.",
+  "author": {
+    "name": "Your Team Name",
+    "email": "your-team@example.com"
+  },
+  "homepage": "https://github.com/your-org/buddy-marketplace",
+  "repository": "https://github.com/your-org/buddy-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "formatter",
+    "code-style",
+    "java",
+    "alipay",
+    "alibaba",
+    "spotless",
+    "eclipse-jdt",
+    "hooks"
+  ]
+}
