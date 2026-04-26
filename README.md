@@ -1,26 +1,30 @@
 # buddy-hub
 
-> Velpro 的 Claude Code Plugin Marketplace
+**[English](./README.md)** | **[中文](./README_zh.md)**
 
-专注于开发者工作流、代码质量、多 agent 协作的 Claude Code 插件集合。
+> A Claude Code Plugin Marketplace by Velpro
+
+A curated collection of Claude Code plugins focused on **developer workflow automation**, **code quality enforcement**, and **multi-agent collaboration**.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 安装 Marketplace
+### Install Marketplace
 
 ```bash
 claude plugin marketplace add KaverinX/buddy-hub
 ```
 
-### 更新 Marketplace
+### Update Marketplace
 
 ```bash
 claude plugin marketplace update KaverinX/buddy-hub
 ```
 
-### 卸载 Marketplace
+### Remove Marketplace
 
 ```bash
 claude plugin marketplace remove KaverinX/buddy-hub
@@ -28,107 +32,218 @@ claude plugin marketplace remove KaverinX/buddy-hub
 
 ---
 
-## 插件管理
+## Plugin Management
 
-安装 Marketplace 后，可以管理其中的单个插件：
+Once the marketplace is added, manage individual plugins:
 
 ```bash
-# 安装插件
+# Install a plugin
 claude plugin install flowsmith@buddy-hub
 
-# 更新插件
+# Update a plugin
 claude plugin update flowsmith@buddy-hub
 
-# 卸载插件
+# Uninstall a plugin
 claude plugin uninstall flowsmith@buddy-hub
 
-# 查看已安装插件
+# List installed plugins
 claude plugin list
 ```
 
 ---
 
-## 当前可用插件
+## Available Plugins
 
-### 🔨 [flowsmith](./plugins/flowsmith) — 状态机驱动的开发 SOP 工作流
+### 🔨 [flowsmith](./plugins/flowsmith) — State-Machine-Driven Development SOP
 
-强制执行五阶段开发流程：**规划 → 架构 → 编码 → 优化 → 三层并行审查**，支持知识沉淀与跨任务经验积累。
+**Role: Core Orchestrator** | `v1.0.0` | 6 commands, 4 agents, 3 skills
 
-**核心特性**：
-- 状态机驱动，禁止跳阶段
-- 4 个 Subagent（独立上下文）：optimizer + 3 个专职 reviewer
-- 3 个 Skill 引导规划/架构/编码阶段
-- Hook 自动校验状态合法性
-- 跨任务经验沉淀到 `.sop/lessons.md`
+Enforces a strict five-phase development cycle: **PLANNING → ARCHITECTURE → IMPLEMENTATION → OPTIMIZATION → REVIEW → DONE**. Prevents "skip thinking, jump to coding" by requiring explicit input/output contracts at each stage.
 
-**安装**：
+**Key Features:**
+- FSM-enforced phase transitions — no skipping allowed
+- 4 independent-context subagents: Optimizer + Architecture / Security / Logic reviewers
+- 3 phase-specific skills guiding planning, architecture design, and implementation discipline
+- PostToolUse hook for automatic state validity checks
+- Cross-task knowledge accumulation via `.sop/lessons.md`
+
 ```bash
 claude plugin install flowsmith@buddy-hub
 ```
 
-详见 [flowsmith README](./plugins/flowsmith/README.md)。
+See [flowsmith README](./plugins/flowsmith/README.md) for details.
 
-### 🔍 [code-archaeologist](./plugins/code-archaeologist) — 老代码考古与重构辅助
+---
 
-在重构、拆分或删除遗留代码前，派遣三个独立考古员（时间、空间、意图）进行深度尽调，识别隐式依赖与历史设计动机。
+### 🔍 [code-archaeologist](./plugins/code-archaeologist) — Legacy Code Archaeology & Refactoring Aid
 
-**核心特性**：
-- 三维度并行分析：History + Dependency + Intent
-- 自动识别反射、配置驱动等隐式调用
-- 考古结论自动注入 flowsmith 任务约束
-- 经验沉淀至 lessons.md，防止重蹈覆辙
+**Role: Legacy Code Analyst** | `v1.0.0` | 6 commands, 3 agents, 1 skill
 
-**安装**：
+Before refactoring, splitting, or deleting legacy code, dispatches three independent archaeologists to perform deep due diligence across three dimensions — preventing 90% of refactoring accidents.
+
+**Key Features:**
+- Three-dimensional parallel analysis: History + Dependency + Intent
+- Detects hidden dependencies invisible to IDEs (reflection, config-driven calls, serialization contracts)
+- Generates "uncrossable red lines" to prevent refactoring regressions
+- Auto-injects archaeological conclusions into flowsmith's planning constraints
+- Decision matrix produces actionable refactoring strategy recommendations
+
 ```bash
 claude plugin install code-archaeologist@buddy-hub
 ```
 
-### 👥 [co-review](./plugins/co-review) — 团队协作审查工具
+---
 
-针对多人协作场景的横向审查。当多位开发者在同一分支工作时，分析团队协作健康度、接口冲突风险与完成度。
+### 👥 [co-review](./plugins/co-review) — Team Collaboration Review
 
-**核心特性**：
-- 3 个 Subagent 独立审视：贡献画像、完成度、协作风险
-- 自动识别跨人接口签名变更通知
-- 纯终端 TUI 看板，支持私聊反馈模式
-- 输出可执行的合并策略建议
+**Role: Team Health Inspector** | `v1.0.0` | 4 commands, 3 agents, 1 skill
 
-**安装**：
+Horizontal code review for multi-author scenarios. Instead of reviewing individual code quality (flowsmith handles that), analyzes team collaboration health, interface conflicts, and completion signals.
+
+**Key Features:**
+- Three-layer architecture: Contribution profiling + Completion assessment + Collaboration risk detection
+- Independent-context subagents prevent analysis contamination
+- Pure-terminal TUI dashboard (`bash scripts/tui/dashboard.sh`)
+- Privacy-first: per-person feedback strictly isolated — no cross-person comparison, no attitude judgment
+- 5-level merge strategy: `merge-now` → `staged` → `coordinate` → `block` → `escalate`
+
 ```bash
 claude plugin install co-review@buddy-hub
 ```
 
 ---
 
-## Marketplace 结构
+### 🎨 [formatter](./plugins/formatter) — Code Style Guardian
+
+**Role: Code Style Guardian** | `v1.1.0` | 1 command, 2 hooks, 1 skill
+
+Edit-time auto-formatting plus session-end style gate. Injects team coding conventions into Claude's editing actions, eliminating style debates.
+
+**Key Features:**
+- Built-in Alipay/Alibaba Java coding convention profile (~270 Eclipse JDT rules)
+- PostToolUse hook: auto-format on every file edit
+- Stop hook: global style check on all changed files before session ends
+- Supports both Maven and Gradle projects with one-shot setup
+- Extensible profile architecture — drop new XML to add language support
+
+```bash
+claude plugin install formatter@buddy-hub
+```
+
+---
+
+## Ecosystem Architecture
+
+The plugins form an interconnected ecosystem, not isolated tools:
+
+```
+                    ┌─────────────────────────────┐
+                    │    🔨 flowsmith (Core)       │
+                    │  State-machine orchestrator  │
+                    │  PLAN → ARCH → IMPL → DONE  │
+                    └──────┬──────────┬────────────┘
+                           │          │
+              Hook: detect │          │ Hook: detect
+              refactor     │          │ multi-author
+              intent       │          │ after review
+                           ▼          ▼
+              ┌────────────────┐  ┌────────────────┐   ┌────────────────┐
+              │ 🔍 code-       │  │ 👥 co-review   │   │ 🎨 formatter   │
+              │ archaeologist  │  │                │   │                │
+              │                │  │ Reads .sop/*   │   │  Orthogonal    │
+              │ Injects into ──┼──▶ Reads .arch/*  │   │  No state      │
+              │ plan.md        │  │ for red lines  │   │  interaction   │
+              └────────────────┘  └────────────────┘   └────────────────┘
+                           │          │
+                           ▼          ▼
+                    ┌─────────────────────────────┐
+                    │   📚 Shared Knowledge Layer  │
+                    │  .sop/lessons.md — all R/W   │
+                    │  .archaeology/report.md      │
+                    └─────────────────────────────┘
+```
+
+### Plugin Relationships
+
+| From | To | Mechanism | Description |
+|------|----|-----------|-------------|
+| flowsmith | code-archaeologist | Hook trigger | Detects refactor/split/migrate keywords → suggests `/arch-init` |
+| flowsmith | co-review | Hook trigger | After `/sop-review` completes + multi-author detected → suggests `/scope-review` |
+| code-archaeologist | flowsmith | `/arch-handoff` | Injects conclusions into `plan.md` constraints & prerequisites |
+| code-archaeologist | co-review | Shared artifacts | Red line list feeds into collaboration risk detection |
+| co-review | flowsmith | Context read | Reads `.sop/` artifacts for more precise analysis |
+| co-review | code-archaeologist | Context read | Reads `.archaeology/report.md` for boundary violation checks |
+| formatter | *(none)* | Orthogonal | Operates independently — no state interaction with other plugins |
+| **All plugins** | `lessons.md` | Shared R/W | Cross-task knowledge accumulation and injection |
+
+---
+
+## Project Structure
 
 ```
 buddy-hub/
 ├── .claude-plugin/
-│   └── marketplace.json                  # Marketplace 元信息
+│   └── marketplace.json          # Marketplace metadata
+├── .github/workflows/
+│   └── static.yml                # GitHub Pages deployment
+├── index.html                    # Interactive marketplace website
+├── README.md                     # English documentation
+├── README_zh.md                  # Chinese documentation
+├── LICENSE                       # MIT License
 └── plugins/
-    ├── flowsmith/                        # SOP 工作流插件
-    ├── code-archaeologist/               # 老代码考古插件
-    ├── co-review/                        # 团队协作审查插件
-    └── formatter/                        # 代码格式化插件
+    ├── flowsmith/                # SOP workflow engine
+    │   ├── commands/             # 6 slash commands
+    │   ├── agents/               # 4 independent-context subagents
+    │   ├── skills/               # 3 phase-specific skills + reference docs
+    │   └── hooks/                # State validation hook
+    ├── code-archaeologist/       # Legacy code archaeology
+    │   ├── commands/             # 6 slash commands
+    │   ├── agents/               # 3 dimensional archaeologists
+    │   ├── skills/               # Refactoring strategy skill + decision matrix
+    │   └── hooks/                # Refactor intent detection hook
+    ├── co-review/                # Team collaboration review
+    │   ├── commands/             # 4 slash commands
+    │   ├── agents/               # 3 independent analyzers
+    │   ├── skills/               # Merge strategy skill + scoring rubric
+    │   ├── hooks/                # Multi-author detection hook
+    │   └── scripts/tui/          # Terminal dashboard
+    └── formatter/                # Code style guardian
+        ├── commands/             # 1 setup command
+        ├── skills/               # Java-Alipay authoring guidance
+        ├── hooks/                # Format + check hooks
+        └── config/profiles/      # Eclipse JDT formatter profiles
 ```
 
 ---
 
-## 后续规划
+## Roadmap
 
-更多 plugin 即将加入：
-- `release-captain` — 自动化发版流程编排（规划中）
-- `knowledge-base-v2` — 增强型跨项目经验检索（规划中）
-
-欢迎在 issues 中提建议或贡献新 plugin。
+| Status | Plugin | Description | Connects To |
+|--------|--------|-------------|-------------|
+| 🟢 Development | **release-captain** | Standardized release orchestration with multi-language Changelog sync, semantic versioning, and release gates. Bridges flowsmith's DONE phase to "shipped". | flowsmith, co-review |
+| 🟡 Backlog | **knowledge-base v2** | Cross-project experience hub. Aggregates all plugins' `lessons.md` into a global semantic index with vector DB search and injection. | flowsmith, code-archaeologist, co-review |
+| 🔵 Research | **Project Insight UI** | Web-based interactive dashboard evolved from co-review's TUI. Real-time code evolution curves, team health heatmaps, and refactoring risk radar. | co-review, code-archaeologist, flowsmith |
 
 ---
 
-## 作者
+## Vision
+
+We believe AI-assisted coding should not mean "write more bugs faster." It should mean **"build truly reliable software with engineering discipline."**
+
+1. **Process as Guardrails** — State machines enforce "think before code." Every phase has explicit contracts. No skipping.
+2. **Knowledge Compounds** — `lessons.md` is a living knowledge base. Every task completion, every review finding, every archaeological conclusion flows back — so the next task stands on the shoulders of history.
+3. **Multi-Agent Isolation** — Each analysis dimension runs in independent context. Security review isn't distracted by optimization suggestions. Team analysis isn't contaminated by individual bias.
+4. **Privacy First** — Team collaboration analysis strictly isolates per-person data. No horizontal comparison, no attitude judgment, no leaking others' info.
+5. **Archaeology Before Action** — Understand before refactoring: why was it written this way? Who depends on it? Which complexity is necessary? This framework prevents 90% of refactoring accidents.
+6. **Full Development Lifecycle** — From idea to production: Planning → Design → Code → Format → Archaeology → Review → Team Collaboration → Release. Every stage has a dedicated plugin.
+
+---
+
+## Author
 
 **Velpro**
 Email: [xvelpro8@gmail.com](mailto:xvelpro8@gmail.com)
+GitHub: [@KaverinX](https://github.com/KaverinX)
 
 ---
 
