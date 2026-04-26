@@ -20,6 +20,10 @@
             --card-border: rgba(255, 255, 255, 0.06);
             --drawer-bg: #0a0a0a;
             --font-mono: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+            --green: #27c93f;
+            --yellow: #ffbd2e;
+            --red: #ff5f56;
+            --blue: #4fa6ed;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,11 +37,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Background Effects */
         .grid-layer {
             position: fixed;
             inset: 0;
-            background-image: 
+            background-image:
                 linear-gradient(to right, var(--grid) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
             background-size: 60px 60px;
@@ -54,6 +57,18 @@
             pointer-events: none;
             z-index: 0;
             filter: blur(100px);
+            opacity: 0.3;
+        }
+        .glow-sphere-2 {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 166, 237, 0.15) 0%, transparent 70%);
+            bottom: -200px;
+            right: -100px;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(120px);
             opacity: 0.3;
         }
 
@@ -130,7 +145,7 @@
         .btn-secondary { background: rgba(255,255,255,0.03); color: var(--fg); border: 1px solid var(--card-border); }
         .btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
-        /* Terminal Component */
+        /* Terminal */
         .terminal-wrap { position: relative; }
         .terminal {
             background: #000;
@@ -144,19 +159,67 @@
         }
         .terminal-header { display: flex; gap: 8px; margin-bottom: 24px; }
         .dot { width: 12px; height: 12px; border-radius: 50%; background: #1a1a1a; }
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; }
+        .dot.red { background: var(--red); }
+        .dot.yellow { background: var(--yellow); }
+        .dot.green { background: var(--green); }
         .line { margin-bottom: 8px; color: #666; }
         .line .p { color: var(--accent); margin-right: 12px; }
         .line .cmd { color: #eee; }
-        .line .success { color: #27c93f; }
+        .line .success { color: var(--green); }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 120px;
+            padding: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+        }
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { font-size: 13px; color: #555; margin-top: 4px; }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 48px;
+        }
+        .section-label {
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(180deg, #fff 30%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .section-subtitle {
+            color: #555;
+            margin-top: 12px;
+            font-size: 1.05rem;
+            max-width: 600px;
+            line-height: 1.7;
+        }
 
         /* Filter Tabs */
         .filter-tabs {
             display: flex;
             gap: 8px;
-            margin-bottom: 40px;
             padding: 4px;
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
@@ -200,20 +263,51 @@
             transform: translateY(-8px);
             background: rgba(110, 86, 207, 0.03);
         }
+        .plugin-card.core-plugin::before {
+            content: 'CORE';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            background: rgba(110, 86, 207, 0.1);
+            border: 1px solid rgba(110, 86, 207, 0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
 
         .plugin-top { display: flex; justify-content: space-between; margin-bottom: 24px; }
-        .plugin-icon { 
-            width: 54px; height: 54px; 
-            background: rgba(255,255,255,0.03); 
-            border-radius: 14px; 
+        .plugin-icon {
+            width: 54px; height: 54px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
             font-size: 24px;
             border: 1px solid var(--card-border);
         }
         .plugin-version { font-size: 11px; color: #444; font-family: var(--font-mono); }
 
-        .plugin-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
-        .plugin-desc { font-size: 0.95rem; color: #888; margin-bottom: 32px; line-height: 1.6; flex: 1; }
+        .plugin-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+        .plugin-role { font-size: 12px; color: var(--accent); margin-bottom: 12px; font-weight: 500; }
+        .plugin-desc { font-size: 0.95rem; color: #888; margin-bottom: 24px; line-height: 1.6; flex: 1; }
+
+        .plugin-meta-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .plugin-meta-badge {
+            font-size: 11px;
+            color: #666;
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .plugin-meta-badge svg { opacity: 0.5; }
 
         .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag {
@@ -223,6 +317,309 @@
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--card-border);
             color: #666;
+        }
+
+        /* Ecosystem Architecture */
+        .ecosystem-section {
+            margin-bottom: 120px;
+        }
+        .ecosystem-diagram {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ecosystem-diagram::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(110, 86, 207, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .eco-core {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+        .eco-core-box {
+            background: rgba(110, 86, 207, 0.08);
+            border: 2px solid rgba(110, 86, 207, 0.3);
+            border-radius: 20px;
+            padding: 28px 48px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .eco-core-box h4 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .eco-core-box p {
+            color: #888;
+            font-size: 13px;
+        }
+        .eco-connector-v {
+            width: 2px;
+            height: 32px;
+            background: linear-gradient(180deg, rgba(110, 86, 207, 0.3), rgba(110, 86, 207, 0.08));
+            position: relative;
+            z-index: 1;
+        }
+        .eco-hub {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px 32px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            font-family: var(--font-mono);
+            position: relative;
+            z-index: 2;
+        }
+        .eco-connector-spread {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin: 0;
+            position: relative;
+            height: 48px;
+        }
+        .eco-connector-spread::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 16px;
+            background: rgba(255,255,255,0.06);
+        }
+        .eco-connector-spread::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: calc(50% - 240px);
+            width: 480px;
+            height: 2px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .eco-branches {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+        .eco-branch {
+            position: relative;
+            padding-top: 24px;
+        }
+        .eco-branch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 24px;
+            background: rgba(255,255,255,0.06);
+        }
+        .eco-branch-box {
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            background: rgba(255,255,255,0.01);
+            transition: all 0.3s;
+        }
+        .eco-branch-box:hover {
+            border-color: rgba(110, 86, 207, 0.2);
+            background: rgba(110, 86, 207, 0.02);
+        }
+        .eco-branch-icon { font-size: 28px; margin-bottom: 12px; }
+        .eco-branch-name { font-weight: 700; margin-bottom: 4px; font-size: 1rem; }
+        .eco-branch-role { font-size: 12px; color: #666; margin-bottom: 12px; }
+        .eco-branch-arrow {
+            font-size: 11px;
+            color: #444;
+            font-family: var(--font-mono);
+        }
+        .eco-branch-arrow .dir { color: var(--accent); }
+
+        .eco-shared-layer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .eco-shared-item {
+            background: rgba(39, 201, 63, 0.04);
+            border: 1px dashed rgba(39, 201, 63, 0.15);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 12px;
+            color: #666;
+            font-family: var(--font-mono);
+        }
+        .eco-shared-item span { color: var(--green); }
+
+        .eco-orthogonal {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+        }
+        .eco-orth-box {
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 32px;
+            text-align: center;
+            background: rgba(255,255,255,0.01);
+            position: relative;
+        }
+        .eco-orth-box::before {
+            content: 'ORTHOGONAL';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: #444;
+            background: var(--bg);
+            padding: 0 8px;
+        }
+        .eco-orth-name { font-weight: 700; font-size: 14px; }
+        .eco-orth-desc { font-size: 12px; color: #555; margin-top: 4px; }
+
+        /* Roadmap */
+        .roadmap-section { margin-bottom: 120px; }
+        .roadmap-container {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 60px;
+            border: 1px solid var(--card-border);
+        }
+        .roadmap-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .roadmap-item {
+            display: grid;
+            grid-template-columns: 120px 48px 1fr;
+            gap: 0;
+            align-items: start;
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .roadmap-item:last-child { border-bottom: none; }
+        .roadmap-phase {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-top: 4px;
+        }
+        .roadmap-phase.dev { color: var(--green); }
+        .roadmap-phase.backlog { color: var(--yellow); }
+        .roadmap-phase.research { color: var(--blue); }
+        .roadmap-dot-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 6px;
+        }
+        .roadmap-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            position: relative;
+        }
+        .roadmap-dot.dev { border-color: var(--green); background: rgba(39, 201, 63, 0.2); }
+        .roadmap-dot.backlog { border-color: var(--yellow); background: rgba(255, 189, 46, 0.2); }
+        .roadmap-dot.research { border-color: var(--blue); background: rgba(79, 166, 237, 0.2); }
+        .roadmap-line {
+            width: 2px;
+            flex: 1;
+            min-height: 40px;
+            background: rgba(255,255,255,0.04);
+            margin-top: 8px;
+        }
+        .roadmap-content h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .roadmap-content p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .roadmap-connects {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .roadmap-connect-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            background: rgba(110, 86, 207, 0.06);
+            border: 1px solid rgba(110, 86, 207, 0.12);
+            color: var(--accent);
+        }
+
+        /* Vision */
+        .vision-section { margin-bottom: 120px; }
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .vision-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 36px;
+            transition: all 0.3s;
+        }
+        .vision-card:hover {
+            border-color: rgba(110, 86, 207, 0.15);
+        }
+        .vision-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, rgba(110, 86, 207, 0.3), rgba(110, 86, 207, 0.05));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        .vision-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .vision-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.7;
         }
 
         /* Drawer */
@@ -242,7 +639,7 @@
             position: fixed;
             right: 0; top: 0; bottom: 0;
             width: 100%;
-            max-width: 600px;
+            max-width: 640px;
             background: var(--drawer-bg);
             z-index: 1001;
             transform: translateX(100%);
@@ -261,10 +658,11 @@
         }
         .drawer-close:hover { color: var(--fg); }
 
-        .drawer-header { margin-bottom: 48px; }
+        .drawer-header { margin-bottom: 40px; }
         .drawer-icon { font-size: 48px; margin-bottom: 24px; }
-        .drawer-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; }
-        
+        .drawer-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+        .drawer-role { font-size: 14px; color: var(--accent); margin-bottom: 16px; font-weight: 500; }
+
         .install-box {
             background: #000;
             border: 1px solid var(--card-border);
@@ -279,30 +677,105 @@
         .btn-copy { background: none; border: none; color: #444; cursor: pointer; font-size: 12px; text-transform: uppercase; font-weight: 700; }
         .btn-copy:hover { color: var(--fg); }
 
-        .drawer-section { margin-bottom: 40px; }
-        .drawer-section h4 { font-size: 12px; text-transform: uppercase; color: #444; margin-bottom: 16px; letter-spacing: 0.1em; }
+        .drawer-section { margin-bottom: 36px; }
+        .drawer-section h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #444;
+            margin-bottom: 16px;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
         .drawer-feature-list { list-style: none; }
-        .drawer-feature-list li { margin-bottom: 12px; display: flex; gap: 12px; color: #888; font-size: 14px; }
-        .drawer-feature-list li::before { content: '✓'; color: var(--accent); }
+        .drawer-feature-list li { margin-bottom: 10px; display: flex; gap: 12px; color: #888; font-size: 14px; }
+        .drawer-feature-list li::before { content: '\2713'; color: var(--accent); font-weight: 700; }
 
-        /* Roadmap & Footer */
-        .roadmap-container { background: var(--card-bg); border-radius: 32px; padding: 60px; margin-bottom: 120px; border: 1px solid var(--card-border); }
-        .roadmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .drawer-commands-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .drawer-cmd {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            color: #888;
+        }
+        .drawer-cmd .name { color: var(--accent); }
+
+        .drawer-arch-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+        .drawer-arch-item {
+            padding: 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+        }
+        .drawer-arch-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .drawer-arch-label {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .drawer-deps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .drawer-dep-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #666;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.015);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .drawer-dep-arrow { color: var(--accent); font-family: var(--font-mono); font-size: 11px; }
+        .drawer-dep-name { color: #aaa; font-weight: 600; }
+
+        /* Footer */
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 80px; padding: 100px 0; border-top: 1px solid var(--card-border); }
+        .footer-links h5 { color: #555; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #444; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--fg); }
 
         @media (max-width: 1024px) {
             .hero { grid-template-columns: 1fr; text-align: center; }
             .tagline { margin: 0 auto 48px; }
             .cta-group { justify-content: center; }
             .terminal { transform: none; max-width: 500px; margin: 0 auto; }
-            .roadmap-grid { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .eco-branches { grid-template-columns: 1fr; }
+            .eco-connector-spread::after { width: 2px; height: 48px; left: 50%; }
+            .vision-grid { grid-template-columns: 1fr; }
+            .roadmap-item { grid-template-columns: 100px 32px 1fr; }
             .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .drawer-commands-grid { grid-template-columns: 1fr; }
+            .drawer-arch-row { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="grid-layer"></div>
     <div class="glow-sphere"></div>
+    <div class="glow-sphere-2"></div>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -312,66 +785,137 @@
             {
                 id: "flowsmith",
                 name: "flowsmith",
-                icon: "🔨",
-                desc: "状态机驱动的开发 SOP 工作流。AI 时代的工程骨架，强制执行从规划到审查的闭环流程，禁止‘跳过思考直接编码’。",
+                icon: "\u{1F528}",
+                role: "Core Orchestrator",
+                isCore: true,
+                desc: "\u72B6\u6001\u673A\u9A71\u52A8\u7684\u5F00\u53D1 SOP \u5DE5\u4F5C\u6D41\u3002AI \u65F6\u4EE3\u7684\u5DE5\u7A0B\u9AA8\u67B6\uFF0C\u5F3A\u5236\u6267\u884C\u4ECE\u89C4\u5212\u5230\u5BA1\u67E5\u7684\u95ED\u73AF\u6D41\u7A0B\uFF0C\u7981\u6B62\u2018\u8DF3\u8FC7\u601D\u8003\u76F4\u63A5\u7F16\u7801\u2019\u3002",
                 category: "workflow",
                 version: "v1.0.0",
-                tags: ["SOP", "FSM", "Governance"],
+                tags: ["SOP", "FSM", "Multi-Agent", "Governance"],
+                commands: ["/sop-init", "/sop-review", "/sop-resume", "/sop-status", "/sop-close", "/sop-bootstrap"],
+                agents: 4,
+                skills: 3,
+                hooks: 1,
                 features: [
-                    "多 Agent 并行审查 (Security, Logic, Architecture)",
-                    "基于 Hook 的状态合法性自动校验",
-                    "跨任务知识沉淀到 .sop/lessons.md",
-                    "驱动 Archaeologist 与 Co-review 的核心引擎"
+                    "\u72B6\u6001\u673A\u5F3A\u5236\u6D41\u7A0B: PLANNING \u2192 ARCHITECTURE \u2192 IMPLEMENTATION \u2192 OPTIMIZATION \u2192 REVIEW \u2192 DONE",
+                    "\u591A Agent \u5E76\u884C\u5BA1\u67E5 (Security / Logic / Architecture / Optimization)",
+                    "\u57FA\u4E8E Hook \u7684\u72B6\u6001\u5408\u6CD5\u6027\u81EA\u52A8\u6821\u9A8C",
+                    "\u8DE8\u4EFB\u52A1\u77E5\u8BC6\u6C89\u6DC0\u5230 .sop/lessons.md",
+                    "\u9A71\u52A8 code-archaeologist \u4E0E co-review \u7684\u6838\u5FC3\u5F15\u64CE"
+                ],
+                dependencies: [
+                    { direction: "drives", target: "code-archaeologist", desc: "\u68C0\u6D4B\u5230\u91CD\u6784\u610F\u56FE\u65F6\u81EA\u52A8\u5EFA\u8BAE\u8003\u53E4" },
+                    { direction: "drives", target: "co-review", desc: "\u5BA1\u67E5\u5B8C\u6210\u540E\u81EA\u52A8\u89E6\u53D1\u56E2\u961F\u534F\u4F5C\u5206\u6790" },
+                    { direction: "shared", target: "lessons.md", desc: "\u5171\u4EAB\u8DE8\u4EFB\u52A1\u77E5\u8BC6\u5E93" }
                 ],
                 install: "claude plugin install flowsmith@buddy-hub"
             },
             {
-                id: "co-review",
-                name: "co-review",
-                icon: "👥",
-                desc: "团队协作审查工具。当多位开发者协作时，审视团队工作的健康度，输出个人级行动建议与合并策略。",
-                category: "collaboration",
-                version: "v1.0.0",
-                tags: ["Team Health", "Merge Strategy", "TUI"],
-                features: [
-                    "三层架构：贡献画像 + 完成度评估 + 风险检测",
-                    "独立上下文子 Agent 避免分析污染",
-                    "纯终端 TUI 可视化看板 (bash scripts/tui/dashboard.sh)",
-                    "生成私密反馈，保护开发者隐私的同时提升质量"
-                ],
-                install: "claude plugin install co-review@buddy-hub"
-            },
-            {
                 id: "code-archaeologist",
                 name: "code-archaeologist",
-                icon: "🔍",
-                desc: "老代码考古与重构辅助。分析遗留系统的历史提交与逻辑演进，为现代重构提供‘历史档案’。",
+                icon: "\u{1F50D}",
+                role: "Legacy Code Analyst",
+                isCore: false,
+                desc: "\u8001\u4EE3\u7801\u8003\u53E4\u4E0E\u91CD\u6784\u8F85\u52A9\u3002\u4ECE\u5386\u53F2\u3001\u4F9D\u8D56\u3001\u610F\u56FE\u4E09\u4E2A\u7EF4\u5EA6\u6DF1\u5EA6\u5206\u6790\u9057\u7559\u7CFB\u7EDF\uFF0C\u4E3A\u73B0\u4EE3\u91CD\u6784\u63D0\u4F9B\u2018\u5386\u53F2\u6863\u6848\u2019\u3002",
                 category: "exploration",
                 version: "v1.0.0",
-                tags: ["Refactoring", "Legacy", "Context"],
+                tags: ["Refactoring", "Legacy", "3D Analysis", "Red Lines"],
+                commands: ["/arch-init", "/arch-status", "/arch-resume", "/arch-report", "/arch-handoff", "/arch-close"],
+                agents: 3,
+                skills: 1,
+                hooks: 1,
                 features: [
-                    "时间、空间、意图三维度并行考古",
-                    "自动识别 IDE 无法检测的反射/配置依赖",
-                    "考古结论自动注入 Flowsmith 的规划约束",
-                    "生成‘不可跨越的红线’清单预防重构回归"
+                    "\u65F6\u95F4\u3001\u7A7A\u95F4\u3001\u610F\u56FE\u4E09\u7EF4\u5EA6\u5E76\u884C\u8003\u53E4",
+                    "\u81EA\u52A8\u8BC6\u522B IDE \u65E0\u6CD5\u68C0\u6D4B\u7684\u53CD\u5C04/\u914D\u7F6E/\u5E8F\u5217\u5316\u4F9D\u8D56",
+                    "\u751F\u6210\u2018\u4E0D\u53EF\u8DE8\u8D8A\u7684\u7EA2\u7EBF\u2019\u6E05\u5355\u9884\u9632\u91CD\u6784\u56DE\u5F52",
+                    "\u8003\u53E4\u7ED3\u8BBA\u81EA\u52A8\u6CE8\u5165 flowsmith \u7684\u89C4\u5212\u7EA6\u675F",
+                    "\u51B3\u7B56\u77E9\u9635\u751F\u6210\u53EF\u6267\u884C\u7684\u91CD\u6784\u7B56\u7565\u5EFA\u8BAE"
+                ],
+                dependencies: [
+                    { direction: "receives", target: "flowsmith", desc: "\u63A5\u6536\u91CD\u6784\u610F\u56FE\u68C0\u6D4B\uFF0C\u88AB flowsmith \u89E6\u53D1" },
+                    { direction: "injects", target: "flowsmith", desc: "\u7ED3\u8BBA\u81EA\u52A8\u6CE8\u5165 plan.md \u7684\u7EA6\u675F\u6761\u4EF6" },
+                    { direction: "feeds", target: "co-review", desc: "\u7EA2\u7EBF\u6E05\u5355\u8F93\u5165 co-review \u98CE\u9669\u5206\u6790" },
+                    { direction: "shared", target: "lessons.md", desc: "\u5171\u4EAB\u8DE8\u4EFB\u52A1\u77E5\u8BC6\u5E93" }
                 ],
                 install: "claude plugin install code-archaeologist@buddy-hub"
             },
             {
+                id: "co-review",
+                name: "co-review",
+                icon: "\u{1F465}",
+                role: "Team Health Inspector",
+                isCore: false,
+                desc: "\u56E2\u961F\u534F\u4F5C\u5BA1\u67E5\u5DE5\u5177\u3002\u5F53\u591A\u4F4D\u5F00\u53D1\u8005\u534F\u4F5C\u65F6\uFF0C\u6C34\u5E73\u5BA1\u89C6\u56E2\u961F\u5DE5\u4F5C\u7684\u5065\u5EB7\u5EA6\uFF0C\u8F93\u51FA\u4E2A\u4EBA\u7EA7\u884C\u52A8\u5EFA\u8BAE\u4E0E\u5408\u5E76\u7B56\u7565\u3002",
+                category: "collaboration",
+                version: "v1.0.0",
+                tags: ["Team Health", "Merge Strategy", "TUI", "Privacy-First"],
+                commands: ["/scope-review", "/scope-status", "/scope-compare", "/scope-individual"],
+                agents: 3,
+                skills: 1,
+                hooks: 1,
+                features: [
+                    "\u4E09\u5C42\u67B6\u6784: \u8D21\u732E\u753B\u50CF + \u5B8C\u6210\u5EA6\u8BC4\u4F30 + \u534F\u4F5C\u98CE\u9669\u68C0\u6D4B",
+                    "\u72EC\u7ACB\u4E0A\u4E0B\u6587\u5B50 Agent \u907F\u514D\u5206\u6790\u6C61\u67D3",
+                    "\u7EAF\u7EC8\u7AEF TUI \u53EF\u89C6\u5316\u770B\u677F",
+                    "\u9690\u79C1\u4F18\u5148: \u4E2A\u4EBA\u53CD\u9988\u4E25\u683C\u9694\u79BB\uFF0C\u4E0D\u505A\u6A2A\u5411\u5BF9\u6BD4",
+                    "5 \u7EA7\u5408\u5E76\u7B56\u7565: merge-now \u2192 staged \u2192 coordinate \u2192 block \u2192 escalate"
+                ],
+                dependencies: [
+                    { direction: "receives", target: "flowsmith", desc: "\u8BFB\u53D6 .sop/ \u4E0A\u4E0B\u6587\u8FDB\u884C\u66F4\u7CBE\u51C6\u7684\u5206\u6790" },
+                    { direction: "receives", target: "code-archaeologist", desc: "\u8BFB\u53D6\u8003\u53E4\u7EA2\u7EBF\u68C0\u6D4B\u8FB9\u754C\u8FDD\u89C4" },
+                    { direction: "shared", target: "lessons.md", desc: "\u5171\u4EAB\u8DE8\u4EFB\u52A1\u77E5\u8BC6\u5E93" }
+                ],
+                install: "claude plugin install co-review@buddy-hub"
+            },
+            {
                 id: "formatter",
                 name: "formatter",
-                icon: "🎨",
-                desc: "编辑即格式化的代码风格守卫。自动将团队规约注入 Claude 的编辑动作中，消除风格争论。",
+                icon: "\u{1F3A8}",
+                role: "Code Style Guardian",
+                isCore: false,
+                desc: "\u7F16\u8F91\u5373\u683C\u5F0F\u5316\u7684\u4EE3\u7801\u98CE\u683C\u5B88\u536B\u3002\u81EA\u52A8\u5C06\u56E2\u961F\u89C4\u7EA6\u6CE8\u5165 Claude \u7684\u7F16\u8F91\u52A8\u4F5C\u4E2D\uFF0C\u6D88\u9664\u98CE\u683C\u4E89\u8BBA\u3002",
                 category: "quality",
                 version: "v1.1.0",
-                tags: ["Spotless", "Alipay", "Lint"],
+                tags: ["Spotless", "Alipay Convention", "Auto-format"],
+                commands: ["/formatter:setup"],
+                agents: 0,
+                skills: 1,
+                hooks: 2,
                 features: [
-                    "内置支付宝/阿里巴巴 Java 代码开发规约",
-                    "Post-Tool-Use 自动执行单文件格式化",
-                    "Stop Hook 执行全局项目风格检查",
-                    "支持 Maven 与 Gradle 项目自动配置"
+                    "\u5185\u7F6E\u652F\u4ED8\u5B9D/\u963F\u91CC\u5DF4\u5DF4 Java \u4EE3\u7801\u5F00\u53D1\u89C4\u7EA6",
+                    "Post-Tool-Use \u81EA\u52A8\u6267\u884C\u5355\u6587\u4EF6\u683C\u5F0F\u5316",
+                    "Stop Hook \u6267\u884C\u5168\u5C40\u9879\u76EE\u98CE\u683C\u68C0\u67E5",
+                    "\u652F\u6301 Maven \u4E0E Gradle \u9879\u76EE\u81EA\u52A8\u914D\u7F6E",
+                    "\u53EF\u6269\u5C55 Profile \u67B6\u6784\uFF0C\u8F7B\u677E\u6DFB\u52A0\u65B0\u8BED\u8A00\u652F\u6301"
+                ],
+                dependencies: [
+                    { direction: "orthogonal", target: "\u72EC\u7ACB\u8FD0\u884C", desc: "\u4E0E\u5176\u4ED6\u63D2\u4EF6\u65E0\u72B6\u6001\u4EA4\u4E92\uFF0C\u6B63\u4EA4\u5C42\u8FD0\u4F5C" }
                 ],
                 install: "claude plugin install formatter@buddy-hub"
+            }
+        ];
+
+        const roadmapData = [
+            {
+                phase: "dev",
+                label: "Development",
+                name: "release-captain",
+                desc: "\u6807\u51C6\u5316\u53D1\u5E03\u6D41\u7A0B\uFF0C\u81EA\u52A8\u540C\u6B65\u591A\u8BED\u8A00 Changelog\uFF0C\u7BA1\u7406\u8BED\u4E49\u5316\u7248\u672C\u4E0E\u53D1\u5E03\u95E8\u7981\u3002\u4E0E flowsmith \u7684 DONE \u9636\u6BB5\u65E0\u7F1D\u8854\u63A5\uFF0C\u5B8C\u6210\u4ECE\u201C\u4EE3\u7801\u5B8C\u5DE5\u201D\u5230\u201C\u53D1\u5E03\u4E0A\u7EBF\u201D\u7684\u6700\u540E\u4E00\u516C\u91CC\u3002",
+                connects: ["flowsmith", "co-review"]
+            },
+            {
+                phase: "backlog",
+                label: "Backlog",
+                name: "knowledge-base v2",
+                desc: "\u8DE8\u9879\u76EE\u7684\u7ECF\u9A8C\u6C89\u6DC0\u4E2D\u5FC3\u3002\u5C06\u6240\u6709\u63D2\u4EF6\u7684 lessons.md \u805A\u5408\u4E3A\u5168\u5C40\u8BED\u4E49\u7D22\u5F15\uFF0C\u5229\u7528\u5411\u91CF\u6570\u636E\u5E93\u5B9E\u73B0\u8DE8\u9879\u76EE\u7ECF\u9A8C\u6CE8\u5165\uFF0C\u8BA9\u6BCF\u4E2A\u65B0\u4EFB\u52A1\u90FD\u80FD\u7AD9\u5728\u5386\u53F2\u8096\u8180\u4E0A\u3002",
+                connects: ["flowsmith", "code-archaeologist", "co-review"]
+            },
+            {
+                phase: "research",
+                label: "Research",
+                name: "Project Insight UI",
+                desc: "\u4ECE co-review \u7684\u7EC8\u7AEF TUI \u8FDB\u5316\u4E3A\u57FA\u4E8E Web \u7684\u4EA4\u4E92\u5F0F\u4EEA\u8868\u76D8\u3002\u5B9E\u65F6\u5448\u73B0\u4EE3\u7801\u6F14\u8FDB\u66F2\u7EBF\u3001\u56E2\u961F\u5065\u5EB7\u70ED\u529B\u56FE\u3001\u91CD\u6784\u98CE\u9669\u96F7\u8FBE\uFF0C\u6210\u4E3A\u6574\u4E2A\u751F\u6001\u7684\u53EF\u89C6\u5316\u4E2D\u67A2\u3002",
+                connects: ["co-review", "code-archaeologist", "flowsmith"]
             }
         ];
 
@@ -413,8 +957,11 @@
                 setTimeout(() => setCopyText("Copy"), 2000);
             };
 
+            const categories = ["all", "workflow", "exploration", "collaboration", "quality"];
+
             return (
                 <div className="container">
+                    {/* Navigation */}
                     <nav>
                         <div className="nav-logo">
                             <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
@@ -425,23 +972,26 @@
                             buddy-hub
                         </div>
                         <div className="nav-links">
-                            <a href="#plugins">Browse</a>
+                            <a href="#plugins">Plugins</a>
+                            <a href="#ecosystem">Ecosystem</a>
+                            <a href="#vision">Vision</a>
                             <a href="#roadmap">Roadmap</a>
                             <a href="https://github.com/KaverinX/buddy-hub">GitHub</a>
                         </div>
                     </nav>
 
+                    {/* Hero */}
                     <header className="hero">
                         <div className="hero-text">
                             <h1>SOPs for Claude Code.</h1>
                             <p className="tagline">
-                                为 Claude 注入工程化灵魂。专注于开发者工作流、代码质量与多 Agent 协作的终极插件市场。
+                                {"\u4E3A Claude \u6CE8\u5165\u5DE5\u7A0B\u5316\u7075\u9B42\u3002\u4E00\u4E2A\u5B8C\u6574\u7684\u63D2\u4EF6\u751F\u6001\u7CFB\u7EDF\uFF0C\u8986\u76D6\u5F00\u53D1\u5168\u751F\u547D\u5468\u671F\u2014\u2014\u4ECE\u89C4\u5212\u3001\u7F16\u7801\u3001\u8003\u53E4\u3001\u5BA1\u67E5\u5230\u56E2\u961F\u534F\u4F5C\uFF0C\u6BCF\u4E2A\u73AF\u8282\u90FD\u6709\u4E13\u5C5E Agent \u62A4\u822A\u3002"}
                             </p>
                             <div className="cta-group">
-                                <a href="#plugins" className="btn btn-primary">探索插件库</a>
+                                <a href="#plugins" className="btn btn-primary">{"\u63A2\u7D22\u63D2\u4EF6\u5E93"}</a>
                                 <a href="https://github.com/KaverinX/buddy-hub" className="btn btn-secondary">
                                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-                                    获取源码
+                                    {"\u83B7\u53D6\u6E90\u7801"}
                                 </a>
                             </div>
                         </div>
@@ -460,7 +1010,7 @@
                                 </div>
                                 {phase >= 1 && (
                                     <div className="line">
-                                        <span className="success">✓ Added marketplace: buddy-hub</span>
+                                        <span className="success">{"\u2713"} Added marketplace: buddy-hub (4 plugins)</span>
                                     </div>
                                 )}
                                 {phase >= 1 && (
@@ -471,32 +1021,52 @@
                                         </span>
                                     </div>
                                 )}
-                                {phase >= 2 && <div className="line success">✓ Installed flowsmith v1.0.0</div>}
+                                {phase >= 2 && <div className="line success">{"\u2713"} Installed flowsmith v1.0.0 (6 commands, 4 agents, 3 skills)</div>}
                                 {phase >= 2 && (
                                     <div className="line">
                                         <span className="p">$</span>
-                                        <span className="cmd">claude plugin list</span>
-                                        <span className="cursor"></span>
+                                        <span className="cmd">/sop-init "implement user auth"</span>
                                     </div>
                                 )}
                             </div>
                         </div>
                     </header>
 
+                    {/* Stats */}
+                    <div className="stats-bar">
+                        <div className="stat-item">
+                            <div className="stat-number">4</div>
+                            <div className="stat-label">{"\u751F\u4EA7\u7EA7\u63D2\u4EF6"}</div>
+                        </div>
+                        <div className="stat-item">
+                            <div className="stat-number">17</div>
+                            <div className="stat-label">{"\u659C\u6760\u547D\u4EE4"}</div>
+                        </div>
+                        <div className="stat-item">
+                            <div className="stat-number">10</div>
+                            <div className="stat-label">{"\u72EC\u7ACB\u4E0A\u4E0B\u6587 Agent"}</div>
+                        </div>
+                        <div className="stat-item">
+                            <div className="stat-number">6</div>
+                            <div className="stat-label">{"\u4E13\u5C5E Skill \u6A21\u677F"}</div>
+                        </div>
+                    </div>
+
+                    {/* Plugin Center */}
                     <section id="plugins">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px' }}>
-                            <div>
-                                <span style={{ fontSize: '12px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '8px' }}>Ecosystem</span>
-                                <h2 style={{ fontSize: '2.5rem', fontWeight: 800 }}>插件中心</h2>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
+                            <div className="section-header" style={{ marginBottom: 0 }}>
+                                <span className="section-label">Ecosystem</span>
+                                <h2 className="section-title">{"\u63D2\u4EF6\u4E2D\u5FC3"}</h2>
                             </div>
                             <div className="filter-tabs">
-                                {["all", "workflow", "quality", "exploration"].map(c => (
-                                    <button 
-                                        key={c} 
+                                {categories.map(c => (
+                                    <button
+                                        key={c}
                                         className={`filter-tab ${filter === c ? 'active' : ''}`}
                                         onClick={() => setFilter(c)}
                                     >
-                                        {c.toUpperCase()}
+                                        {c === "all" ? "ALL" : c.toUpperCase()}
                                     </button>
                                 ))}
                             </div>
@@ -504,13 +1074,30 @@
 
                         <div className="plugin-grid">
                             {filteredPlugins.map(p => (
-                                <div className="plugin-card" key={p.id} onClick={() => setSelectedId(p.id)}>
+                                <div className={`plugin-card ${p.isCore ? 'core-plugin' : ''}`} key={p.id} onClick={() => setSelectedId(p.id)}>
                                     <div className="plugin-top">
                                         <div className="plugin-icon">{p.icon}</div>
                                         <span className="plugin-version">{p.version}</span>
                                     </div>
                                     <h3 className="plugin-name">{p.name}</h3>
+                                    <div className="plugin-role">{p.role}</div>
                                     <p className="plugin-desc">{p.desc}</p>
+                                    <div className="plugin-meta-row">
+                                        <span className="plugin-meta-badge">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5zM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11z"/></svg>
+                                            {p.commands.length} cmds
+                                        </span>
+                                        {p.agents > 0 && (
+                                            <span className="plugin-meta-badge">
+                                                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fillRule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/><path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
+                                                {p.agents} agents
+                                            </span>
+                                        )}
+                                        <span className="plugin-meta-badge">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1H5.5z"/><path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                            {p.hooks} hooks
+                                        </span>
+                                    </div>
                                     <div className="tag-row">
                                         {p.tags.map(t => <span className="tag" key={t}>{t}</span>)}
                                     </div>
@@ -519,40 +1106,154 @@
                         </div>
                     </section>
 
-                    <section id="roadmap">
-                        <h2 style={{ marginBottom: '48px', fontSize: '2rem' }}>后续规划</h2>
-                        <div className="roadmap-container">
-                            <div className="roadmap-grid">
-                                <div className="roadmap-item">
-                                    <span className="roadmap-status active">Development</span>
-                                    <h4>release-captain</h4>
-                                    <p>标准化发布流程，自动同步多语言 Changelog，管理语义化版本与发布门禁。</p>
+                    {/* Ecosystem Architecture */}
+                    <section id="ecosystem" className="ecosystem-section">
+                        <div className="section-header">
+                            <span className="section-label">Architecture</span>
+                            <h2 className="section-title">{"\u63D2\u4EF6\u751F\u6001\u67B6\u6784"}</h2>
+                            <p className="section-subtitle">{"\u4EE5 flowsmith \u4E3A\u6838\u5FC3\u7F16\u6392\u5668\uFF0C\u4E09\u4E2A\u4E13\u4E1A\u63D2\u4EF6\u5206\u5C42\u534F\u4F5C\u3002\u6BCF\u4E2A\u63D2\u4EF6\u53EF\u72EC\u7ACB\u4F7F\u7528\uFF0C\u7EC4\u5408\u4F7F\u7528\u65F6\u901A\u8FC7 Hook \u4E0E\u5171\u4EAB\u77E5\u8BC6\u5E93\u4EA7\u751F\u5316\u5B66\u53CD\u5E94\u3002"}</p>
+                        </div>
+                        <div className="ecosystem-diagram">
+                            {/* Core */}
+                            <div className="eco-core">
+                                <div className="eco-core-box">
+                                    <h4>{"\u{1F528} flowsmith"}</h4>
+                                    <p>{"\u72B6\u6001\u673A\u7F16\u6392\u5668 \u00B7 PLANNING \u2192 ARCH \u2192 IMPL \u2192 OPT \u2192 REVIEW \u2192 DONE"}</p>
                                 </div>
-                                <div className="roadmap-item">
-                                    <span className="roadmap-status">Backlog</span>
-                                    <h4>knowledge-base v2</h4>
-                                    <p>跨项目的经验沉淀中心，利用向量数据库实现 lessons.md 的全局语义搜索与注入。</p>
+                                <div className="eco-connector-v"></div>
+                                <div className="eco-hub">{"\u2193 Hook \u89E6\u53D1 + \u4E0A\u4E0B\u6587\u5171\u4EAB \u2193"}</div>
+                            </div>
+                            <div className="eco-connector-spread"></div>
+
+                            {/* Branches */}
+                            <div className="eco-branches">
+                                <div className="eco-branch">
+                                    <div className="eco-branch-box">
+                                        <div className="eco-branch-icon">{"\u{1F50D}"}</div>
+                                        <div className="eco-branch-name">code-archaeologist</div>
+                                        <div className="eco-branch-role">{"\u9057\u7559\u4EE3\u7801\u8003\u53E4"}</div>
+                                        <div className="eco-branch-arrow">
+                                            <span className="dir">{"\u2190"}</span> {"\u63A5\u6536\u91CD\u6784\u610F\u56FE"} <span className="dir">{"\u2192"}</span> {"\u6CE8\u5165\u7EA6\u675F"}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="roadmap-item">
-                                    <span className="roadmap-status">Research</span>
-                                    <h4>Project Insight UI</h4>
-                                    <p>从 TUI 看板进化为基于 Web 的交互式仪表盘，实时呈现代码演进与团队健康曲线。</p>
+                                <div className="eco-branch">
+                                    <div className="eco-branch-box">
+                                        <div className="eco-branch-icon">{"\u{1F465}"}</div>
+                                        <div className="eco-branch-name">co-review</div>
+                                        <div className="eco-branch-role">{"\u56E2\u961F\u534F\u4F5C\u5BA1\u67E5"}</div>
+                                        <div className="eco-branch-arrow">
+                                            <span className="dir">{"\u2190"}</span> {"\u8BFB\u53D6 .sop/ + .archaeology/"}
+                                        </div>
+                                    </div>
                                 </div>
+                                <div className="eco-branch">
+                                    <div className="eco-branch-box">
+                                        <div className="eco-branch-icon">{"\u{1F3A8}"}</div>
+                                        <div className="eco-branch-name">formatter</div>
+                                        <div className="eco-branch-role">{"\u4EE3\u7801\u98CE\u683C\u5B88\u536B"}</div>
+                                        <div className="eco-branch-arrow">
+                                            {"\u{1F7F0}"} {"\u6B63\u4EA4\u5C42\uFF0C\u72EC\u7ACB\u8FD0\u884C"}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Shared Layer */}
+                            <div className="eco-shared-layer">
+                                <div className="eco-shared-item"><span>{"\u{1F4DA}"}</span> .sop/lessons.md {"\u2014 \u5171\u4EAB\u77E5\u8BC6\u5E93\uFF0C\u6240\u6709\u63D2\u4EF6\u8BFB\u5199"}</div>
+                                <div className="eco-shared-item"><span>{"\u{1F6A9}"}</span> .archaeology/report.md {"\u2014 \u7EA2\u7EBF\u6E05\u5355\u8DE8\u63D2\u4EF6\u5F15\u7528"}</div>
                             </div>
                         </div>
                     </section>
 
+                    {/* Vision */}
+                    <section id="vision" className="vision-section">
+                        <div className="section-header">
+                            <span className="section-label">Why buddy-hub</span>
+                            <h2 className="section-title">{"\u5B8F\u4F1F\u613F\u666F"}</h2>
+                            <p className="section-subtitle">{"\u6211\u4EEC\u76F8\u4FE1 AI \u7F16\u7A0B\u4E0D\u5E94\u8BE5\u662F\u201C\u66F4\u5FEB\u5730\u5199\u51FA\u66F4\u591A Bug\u201D\uFF0C\u800C\u662F\u201C\u7528\u5DE5\u7A0B\u7EAA\u5F8B\u6253\u9020\u771F\u6B63\u53EF\u9760\u7684\u8F6F\u4EF6\u201D\u3002"}</p>
+                        </div>
+                        <div className="vision-grid">
+                            <div className="vision-card">
+                                <div className="vision-number">01</div>
+                                <h4>{"\u6D41\u7A0B\u5373\u62A4\u680F"}</h4>
+                                <p>{"\u72B6\u6001\u673A\u5F3A\u5236\u201C\u5148\u601D\u8003\u518D\u7F16\u7801\u201D\u3002\u4ECE\u9700\u6C42\u5206\u89E3\u3001\u67B6\u6784\u8BBE\u8BA1\u5230\u591A\u5C42\u5BA1\u67E5\uFF0C\u6BCF\u4E2A\u9636\u6BB5\u90FD\u6709\u660E\u786E\u7684\u8F93\u5165\u8F93\u51FA\u5951\u7EA6\uFF0C\u7981\u6B62\u8DF3\u8FC7\u3002"}</p>
+                            </div>
+                            <div className="vision-card">
+                                <div className="vision-number">02</div>
+                                <h4>{"\u77E5\u8BC6\u4F1A\u6C89\u6DC0"}</h4>
+                                <p>{"lessons.md \u4E0D\u662F\u65E5\u5FD7\uFF0C\u662F\u6D3B\u7684\u77E5\u8BC6\u5E93\u3002\u6BCF\u6B21\u4EFB\u52A1\u5B8C\u6210\u3001\u6BCF\u6B21\u5BA1\u67E5\u53D1\u73B0\u3001\u6BCF\u6B21\u8003\u53E4\u7ED3\u8BBA\u90FD\u4F1A\u56DE\u6D41\uFF0C\u8BA9\u4E0B\u4E00\u6B21\u4EFB\u52A1\u7AD9\u5728\u5386\u53F2\u8096\u8180\u4E0A\u3002"}</p>
+                            </div>
+                            <div className="vision-card">
+                                <div className="vision-number">03</div>
+                                <h4>{"\u591A Agent \u534F\u4F5C"}</h4>
+                                <p>{"\u6BCF\u4E2A\u5206\u6790\u7EF4\u5EA6\u90FD\u7531\u72EC\u7ACB\u4E0A\u4E0B\u6587\u7684 Agent \u6267\u884C\uFF0C\u907F\u514D\u5206\u6790\u6C61\u67D3\u3002\u5B89\u5168\u5BA1\u67E5\u4E0D\u4F1A\u88AB\u4F18\u5316\u5EFA\u8BAE\u5E72\u6270\uFF0C\u56E2\u961F\u5206\u6790\u4E0D\u4F1A\u88AB\u4E2A\u4EBA\u504F\u89C1\u6C61\u67D3\u3002"}</p>
+                            </div>
+                            <div className="vision-card">
+                                <div className="vision-number">04</div>
+                                <h4>{"\u9690\u79C1\u4F18\u5148"}</h4>
+                                <p>{"\u56E2\u961F\u534F\u4F5C\u5206\u6790\u4E25\u683C\u9694\u79BB\u4E2A\u4EBA\u6570\u636E\u3002\u4E0D\u505A\u6A2A\u5411\u5BF9\u6BD4\u3001\u4E0D\u5224\u65AD\u6001\u5EA6\u3001\u4E0D\u6CC4\u9732\u4ED6\u4EBA\u4FE1\u606F\u2014\u2014\u8BA9\u5DE5\u5177\u670D\u52A1\u4E8E\u6210\u957F\uFF0C\u800C\u975E\u5236\u9020\u7126\u8651\u3002"}</p>
+                            </div>
+                            <div className="vision-card">
+                                <div className="vision-number">05</div>
+                                <h4>{"\u8003\u53E4\u800C\u975E\u731B\u51B2"}</h4>
+                                <p>{"\u91CD\u6784\u524D\u5148\u7406\u89E3\u2014\u2014\u4E3A\u4EC0\u4E48\u5F53\u521D\u8FD9\u6837\u5199\uFF1F\u8C01\u5728\u4F9D\u8D56\u5B83\uFF1F\u54EA\u4E9B\u662F\u5FC5\u8981\u590D\u6742\u6027\uFF1F\u8FD9\u5957\u601D\u8003\u6846\u67B6\u80FD\u9884\u9632 90% \u7684\u91CD\u6784\u4E8B\u6545\u3002"}</p>
+                            </div>
+                            <div className="vision-card">
+                                <div className="vision-number">06</div>
+                                <h4>{"\u5F00\u53D1\u5168\u5468\u671F"}</h4>
+                                <p>{"\u4ECE\u201C\u60F3\u6CD5\u201D\u5230\u201C\u4E0A\u7EBF\u201D\u7684\u5B8C\u6574\u94FE\u8DEF: \u89C4\u5212 \u2192 \u8BBE\u8BA1 \u2192 \u7F16\u7801 \u2192 \u683C\u5F0F\u5316 \u2192 \u8003\u53E4 \u2192 \u5BA1\u67E5 \u2192 \u56E2\u961F\u534F\u4F5C \u2192 \u53D1\u5E03\u3002\u6BCF\u4E2A\u73AF\u8282\u90FD\u6709\u63D2\u4EF6\u62A4\u822A\u3002"}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Roadmap */}
+                    <section id="roadmap" className="roadmap-section">
+                        <div className="section-header">
+                            <span className="section-label">What's Next</span>
+                            <h2 className="section-title">{"\u540E\u7EED\u89C4\u5212"}</h2>
+                            <p className="section-subtitle">{"\u6BCF\u4E2A\u65B0\u63D2\u4EF6\u90FD\u4E0D\u662F\u5B64\u5C9B\uFF0C\u800C\u662F\u4E0E\u73B0\u6709\u751F\u6001\u7684\u6DF1\u5EA6\u878D\u5408\u3002\u5B83\u4EEC\u5C06\u8865\u5168\u4ECE\u201C\u4EE3\u7801\u5B8C\u5DE5\u201D\u5230\u201C\u77E5\u8BC6\u6C89\u6DC0\u201D\u7684\u6700\u540E\u51E0\u5757\u62FC\u56FE\u3002"}</p>
+                        </div>
+                        <div className="roadmap-container">
+                            <div className="roadmap-timeline">
+                                {roadmapData.map((item, idx) => (
+                                    <div className="roadmap-item" key={idx}>
+                                        <div className={`roadmap-phase ${item.phase}`}>{item.label}</div>
+                                        <div className="roadmap-dot-col">
+                                            <div className={`roadmap-dot ${item.phase}`}></div>
+                                            {idx < roadmapData.length - 1 && <div className="roadmap-line"></div>}
+                                        </div>
+                                        <div className="roadmap-content">
+                                            <h4>{item.name}</h4>
+                                            <p>{item.desc}</p>
+                                            <div className="roadmap-connects">
+                                                {item.connects.map(c => (
+                                                    <span className="roadmap-connect-tag" key={c}>{"\u2194"} {c}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
                     <footer className="footer-grid">
                         <div className="footer-brand">
                             <h2 style={{ fontWeight: 800 }}>buddy-hub</h2>
-                            <p style={{ color: '#555', marginTop: '16px', lineHeight: 1.8 }}>专注于提升 Claude Code 生产力的插件生态系统。由开发者为开发者打造，旨在建立更严谨、更高效的 AI 开发范式。</p>
+                            <p style={{ color: '#555', marginTop: '16px', lineHeight: 1.8 }}>
+                                {"\u4E13\u6CE8\u4E8E\u63D0\u5347 Claude Code \u751F\u4EA7\u529B\u7684\u63D2\u4EF6\u751F\u6001\u7CFB\u7EDF\u3002\u7531\u5F00\u53D1\u8005\u4E3A\u5F00\u53D1\u8005\u6253\u9020\uFF0C\u65E8\u5728\u5EFA\u7ACB\u66F4\u4E25\u8C28\u3001\u66F4\u9AD8\u6548\u7684 AI \u5F00\u53D1\u8303\u5F0F\u3002"}
+                            </p>
+                            <p style={{ color: '#333', marginTop: '24px', fontSize: '13px' }}>{"\u00A9 2026 Velpro \u00B7 MIT License"}</p>
                         </div>
                         <div className="footer-links">
                             <h5>Marketplace</h5>
                             <ul>
                                 <li><a href="#plugins">Browse Plugins</a></li>
+                                <li><a href="#ecosystem">Ecosystem Map</a></li>
                                 <li><a href="https://github.com/KaverinX/buddy-hub/issues">Submit Plugin</a></li>
-                                <li><a href="#">Safety & Security</a></li>
                             </ul>
                         </div>
                         <div className="footer-links">
@@ -560,22 +1261,44 @@
                             <ul>
                                 <li><a href="https://github.com/KaverinX">GitHub Profile</a></li>
                                 <li><a href="mailto:xvelpro8@gmail.com">Email Velpro</a></li>
-                                <li><a href="#">Documentation</a></li>
+                                <li><a href="https://github.com/KaverinX/buddy-hub">Documentation</a></li>
                             </ul>
                         </div>
                     </footer>
 
+                    {/* Drawer */}
                     <div className={`drawer-overlay ${selectedId ? 'active' : ''}`} onClick={() => setSelectedId(null)}></div>
                     <div className={`drawer ${selectedId ? 'active' : ''}`}>
                         {selectedPlugin && (
                             <>
-                                <button className="drawer-close" onClick={() => setSelectedId(null)}>×</button>
+                                <button className="drawer-close" onClick={() => setSelectedId(null)}>{"\u00D7"}</button>
                                 <div className="drawer-header">
                                     <div className="drawer-icon">{selectedPlugin.icon}</div>
                                     <h2 className="drawer-title">{selectedPlugin.name}</h2>
-                                    <p style={{ color: '#888', fontSize: '1.1rem' }}>{selectedPlugin.desc}</p>
+                                    <div className="drawer-role">{selectedPlugin.role}</div>
+                                    <p style={{ color: '#888', fontSize: '1rem', lineHeight: 1.7 }}>{selectedPlugin.desc}</p>
                                 </div>
 
+                                {/* Architecture Stats */}
+                                <div className="drawer-section">
+                                    <h4>Architecture</h4>
+                                    <div className="drawer-arch-row">
+                                        <div className="drawer-arch-item">
+                                            <div className="drawer-arch-number">{selectedPlugin.commands.length}</div>
+                                            <div className="drawer-arch-label">Commands</div>
+                                        </div>
+                                        <div className="drawer-arch-item">
+                                            <div className="drawer-arch-number">{selectedPlugin.agents}</div>
+                                            <div className="drawer-arch-label">Agents</div>
+                                        </div>
+                                        <div className="drawer-arch-item">
+                                            <div className="drawer-arch-number">{selectedPlugin.hooks}</div>
+                                            <div className="drawer-arch-label">Hooks</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Install */}
                                 <div className="drawer-section">
                                     <h4>Installation</h4>
                                     <div className="install-box">
@@ -584,6 +1307,19 @@
                                     </div>
                                 </div>
 
+                                {/* Commands */}
+                                <div className="drawer-section">
+                                    <h4>Commands</h4>
+                                    <div className="drawer-commands-grid">
+                                        {selectedPlugin.commands.map((cmd, i) => (
+                                            <div className="drawer-cmd" key={i}>
+                                                <span className="name">{cmd}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Features */}
                                 <div className="drawer-section">
                                     <h4>Core Features</h4>
                                     <ul className="drawer-feature-list">
@@ -593,6 +1329,28 @@
                                     </ul>
                                 </div>
 
+                                {/* Dependencies */}
+                                <div className="drawer-section">
+                                    <h4>Ecosystem Connections</h4>
+                                    <div className="drawer-deps">
+                                        {selectedPlugin.dependencies.map((dep, i) => (
+                                            <div className="drawer-dep-item" key={i}>
+                                                <span className="drawer-dep-arrow">
+                                                    {dep.direction === "drives" && "\u2192"}
+                                                    {dep.direction === "receives" && "\u2190"}
+                                                    {dep.direction === "injects" && "\u2192"}
+                                                    {dep.direction === "feeds" && "\u2192"}
+                                                    {dep.direction === "shared" && "\u21C4"}
+                                                    {dep.direction === "orthogonal" && "\u{1F7F0}"}
+                                                </span>
+                                                <span className="drawer-dep-name">{dep.target}</span>
+                                                <span>{dep.desc}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Metadata */}
                                 <div className="drawer-section">
                                     <h4>Metadata</h4>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
@@ -601,15 +1359,15 @@
                                             <div style={{ fontSize: '14px', color: '#888' }}>{selectedPlugin.category}</div>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '10px', color: '#444', textTransform: 'uppercase', marginBottom: '4px' }}>Latest Version</div>
+                                            <div style={{ fontSize: '10px', color: '#444', textTransform: 'uppercase', marginBottom: '4px' }}>Version</div>
                                             <div style={{ fontSize: '14px', color: '#888' }}>{selectedPlugin.version}</div>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div style={{ marginTop: '80px', paddingTop: '40px', borderTop: '1px solid var(--card-border)' }}>
+
+                                <div style={{ marginTop: '40px', paddingTop: '40px', borderTop: '1px solid var(--card-border)' }}>
                                     <a href={`https://github.com/KaverinX/buddy-hub/tree/main/plugins/${selectedPlugin.id}`} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-                                        查看详细文档 & 源代码
+                                        {"\u67E5\u770B\u8BE6\u7EC6\u6587\u6863 & \u6E90\u4EE3\u7801"}
                                     </a>
                                 </div>
                             </>
